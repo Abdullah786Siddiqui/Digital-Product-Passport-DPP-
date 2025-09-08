@@ -5,11 +5,9 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
 import {
   Package,
-  TrendingUp,
   CheckCircle,
   AlertTriangle,
   Users,
@@ -156,9 +154,10 @@ export default function Analytics() {
                   dataKey="value"
                   label
                 >
-                  {complianceData.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                  ))}
+               {complianceData.map((_, index) => (
+  <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+))}
+
                 </Pie>
                 <Legend />
                 <Tooltip />

@@ -49,11 +49,22 @@ export default function AddProduct() {
   };
 
   // Material handlers
-  const handleMaterialChange = (index, field, value) => {
-    const updatedMaterials = [...formData.materials];
-    updatedMaterials[index][field] = value;
-    setFormData({ ...formData, materials: updatedMaterials });
+const handleMaterialChange = (
+  index: number, 
+  field: string, 
+  value: string | number | boolean
+): void => {
+  const updatedMaterials = [...formData.materials];
+  updatedMaterials[index] = {
+    ...updatedMaterials[index],
+    [field]: value,
   };
+  
+  setFormData({ 
+    ...formData, 
+    materials: updatedMaterials 
+  });
+};
 
   const addMaterial = () =>
     setFormData({
@@ -61,13 +72,13 @@ export default function AddProduct() {
       materials: [...formData.materials, { name: "", percentage: "" }],
     });
 
-  const removeMaterial = (index) => {
+  const removeMaterial = (index:number) => {
     const updated = formData.materials.filter((_, i) => i !== index);
     setFormData({ ...formData, materials: updated });
   };
 
   // Certification handlers
-  const handleCertificationChange = (index, value) => {
+  const handleCertificationChange = (index:number, value:string) => {
     const updatedCerts = [...formData.certifications];
     updatedCerts[index] = value;
     setFormData({ ...formData, certifications: updatedCerts });
@@ -79,7 +90,7 @@ export default function AddProduct() {
       certifications: [...formData.certifications, ""],
     });
 
-  const removeCertification = (index) => {
+  const removeCertification = (index:number) => {
     const updated = formData.certifications.filter((_, i) => i !== index);
     setFormData({ ...formData, certifications: updated });
   };

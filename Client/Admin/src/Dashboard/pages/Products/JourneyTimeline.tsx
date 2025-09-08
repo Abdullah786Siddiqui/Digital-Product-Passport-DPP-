@@ -4,7 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
-import { ChevronDown, MapPin, Calendar, Plus, Upload } from "lucide-react";
+import {  MapPin, Calendar, Plus, Upload } from "lucide-react";
 
 // Mock component for Shadcn UI components that don't exist in the base library but are used in the design
 const Icon = ({ name, className }: { name: string, className?: string }) => {
@@ -22,7 +22,7 @@ const Icon = ({ name, className }: { name: string, className?: string }) => {
   }
 };
 
-const TimelineItem = ({ title, description, children }: { title: string, description?: string, children: React.ReactNode }) => (
+const TimelineItem = ({ title, children }: { title: string, description?: string, children: React.ReactNode }) => (
   <AccordionItem value={title} className="border-b px-6 py-4">
     <AccordionTrigger className="text-lg font-medium hover:no-underline">
       {title}
