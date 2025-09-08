@@ -36,9 +36,9 @@ const data = {
   },
   teams: [
     {
-      name: "Rapid Rescue",
+      name: "zApps Counsoulting",
       logo: Zap,
-      plan: "Driver Panel",
+      plan: "Digital Product Passport",
     },
     {
       name: "Acme Corp.",
