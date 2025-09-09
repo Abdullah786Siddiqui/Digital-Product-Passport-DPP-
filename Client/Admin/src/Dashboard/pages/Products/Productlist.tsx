@@ -113,12 +113,12 @@ export default function ProductsList() {
       </div>
 
       {/* Products Table */}
-      <Card className="shadow-sm">
+      <Card className="shadow-sm ">
         <CardContent className="p-0">
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Name</TableHead>
+                <TableHead className="px-2">Name</TableHead>
                 <TableHead>Category</TableHead>
                 <TableHead>Status</TableHead>
                 <TableHead>Supplier</TableHead>
