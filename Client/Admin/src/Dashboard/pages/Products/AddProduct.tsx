@@ -29,7 +29,7 @@ import {
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
-export default function AddProduct() {
+export default function AddProduct () {
   const steps = [
     { title: "General Info", icon: <Package className="w-4 h-4" /> },
     { title: "Materials", icon: <Factory className="w-4 h-4" /> },
@@ -79,11 +79,11 @@ export default function AddProduct() {
     }
   };
 
-  const handleInputChange = (field, value) => {
+  const handleInputChange = (field: string, value: string) => {
     setFormData({ ...formData, [field]: value });
   };
 
-  const handleMaterialChange = (index, field, value) => {
+  const handleMaterialChange = (index: number, field: string, value: string) => {
     const updatedMaterials = [...formData.materials];
     updatedMaterials[index] = {
       ...updatedMaterials[index],
@@ -98,12 +98,12 @@ export default function AddProduct() {
       materials: [...formData.materials, { name: "", percentage: "" }],
     });
 
-  const removeMaterial = (index) => {
+  const removeMaterial = (index: number) => {
     const updated = formData.materials.filter((_, i) => i !== index);
     setFormData({ ...formData, materials: updated.length > 0 ? updated : [{ name: "", percentage: "" }] });
   };
 
-  const handleCertificationChange = (index, value) => {
+  const handleCertificationChange = (index: number, value: string) => {
     const updatedCerts = [...formData.certifications];
     updatedCerts[index] = value;
     setFormData({ ...formData, certifications: updatedCerts });
@@ -115,7 +115,7 @@ export default function AddProduct() {
       certifications: [...formData.certifications, ""],
     });
 
-  const removeCertification = (index) => {
+  const removeCertification = (index: number) => {
     const updated = formData.certifications.filter((_, i) => i !== index);
     setFormData({ ...formData, certifications: updated.length > 0 ? updated : [""] });
   };
@@ -259,97 +259,97 @@ export default function AddProduct() {
         );
       case 4:
         return (
-        <div className="space-y-8">
-  <h3 className="text-3xl font-bold text-gray-800 border-b-2 pb-4 mb-6">Review & Confirm</h3>
+          <div className="space-y-8">
+            <h3 className="text-3xl font-bold text-gray-800 border-b-2 pb-4 mb-6">Review & Confirm</h3>
 
-  {/* General Information Card */}
-  <Card className="shadow-sm">
-    <CardHeader className="flex flex-row items-center gap-2">
-      <Package className="w-6 h-6 text-blue-600" />
-      <CardTitle className="text-xl font-semibold text-gray-800">General Information</CardTitle>
-    </CardHeader>
-    <CardContent className="space-y-4 pt-4">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-4">
-        <div>
-          <p className="text-sm font-medium text-gray-500">Product Name</p>
-          <p className="text-gray-900 font-semibold">{formData.name || 'Not provided'}</p>
-        </div>
-        <div>
-          <p className="text-sm font-medium text-gray-500">Category</p>
-          <p className="text-gray-900 font-semibold">{formData.category || 'Not provided'}</p>
-        </div>
-        <div className="md:col-span-2">
-          <p className="text-sm font-medium text-gray-500">Description</p>
-          <p className="text-gray-900">{formData.description || 'Not provided'}</p>
-        </div>
-      </div>
-    </CardContent>
-  </Card>
+            {/* General Information Card */}
+            <Card className="shadow-sm">
+              <CardHeader className="flex flex-row items-center gap-2">
+                <Package className="w-6 h-6 text-blue-600" />
+                <CardTitle className="text-xl font-semibold text-gray-800">General Information</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4 pt-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-4">
+                  <div>
+                    <p className="text-sm font-medium text-gray-500">Product Name</p>
+                    <p className="text-gray-900 font-semibold">{formData.name || 'Not provided'}</p>
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium text-gray-500">Category</p>
+                    <p className="text-gray-900 font-semibold">{formData.category || 'Not provided'}</p>
+                  </div>
+                  <div className="md:col-span-2">
+                    <p className="text-sm font-medium text-gray-500">Description</p>
+                    <p className="text-gray-900">{formData.description || 'Not provided'}</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
 
-  {/* Materials and Supplier Section */}
-  <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-    {/* Materials Card */}
-    <Card className="shadow-sm">
-      <CardHeader className="flex flex-row items-center gap-2">
-        <Factory className="w-6 h-6 text-green-600" />
-        <CardTitle className="text-xl font-semibold text-gray-800">Materials</CardTitle>
-      </CardHeader>
-      <CardContent>
-        {formData.materials.filter(mat => mat.name).length > 0 ? (
-          <div className="space-y-3">
-            {formData.materials.filter(mat => mat.name).map((mat, idx) => (
-              <div key={idx} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                <span className="text-gray-900">{mat.name}</span>
-                <Badge variant="secondary" className="bg-gray-200 text-gray-800 font-medium">{mat.percentage}%</Badge>
-              </div>
-            ))}
+            {/* Materials and Supplier Section */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              {/* Materials Card */}
+              <Card className="shadow-sm">
+                <CardHeader className="flex flex-row items-center gap-2">
+                  <Factory className="w-6 h-6 text-green-600" />
+                  <CardTitle className="text-xl font-semibold text-gray-800">Materials</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  {formData.materials.filter(mat => mat.name).length > 0 ? (
+                    <div className="space-y-3">
+                      {formData.materials.filter(mat => mat.name).map((mat, idx) => (
+                        <div key={idx} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                          <span className="text-gray-900">{mat.name}</span>
+                          <Badge variant="secondary" className="bg-gray-200 text-gray-800 font-medium">{mat.percentage}%</Badge>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <p className="text-sm text-gray-500 italic">No materials added.</p>
+                  )}
+                </CardContent>
+              </Card>
+
+              {/* Supplier Card */}
+              <Card className="shadow-sm">
+                <CardHeader className="flex flex-row items-center gap-2">
+                  <Users className="w-6 h-6 text-purple-600" />
+                  <CardTitle className="text-xl font-semibold text-gray-800">Supplier & Origin</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4 pt-4">
+                  <div>
+                    <p className="text-sm font-medium text-gray-500">Supplier Name</p>
+                    <p className="text-gray-900 font-semibold">{formData.supplier.name || 'Not provided'}</p>
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium text-gray-500">Location</p>
+                    <p className="text-gray-900 font-semibold">{formData.supplier.location || 'Not provided'}</p>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* Certifications Card */}
+            <Card className="shadow-sm">
+              <CardHeader className="flex flex-row items-center gap-2">
+                <FileCheck className="w-6 h-6 text-teal-600" />
+                <CardTitle className="text-xl font-semibold text-gray-800">Certifications</CardTitle>
+              </CardHeader>
+              <CardContent>
+                {formData.certifications.filter(cert => cert).length > 0 ? (
+                  <div className="flex flex-wrap gap-2">
+                    {formData.certifications.filter(cert => cert).map((cert, idx) => (
+                      <Badge key={idx} variant="outline" className="text-teal-600 border-teal-600 bg-teal-50 px-4 py-1.5 font-medium">
+                        <CheckCircle className="w-4 h-4 mr-2" />{cert}
+                      </Badge>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-sm text-gray-500 italic">No certifications added.</p>
+                )}
+              </CardContent>
+            </Card>
           </div>
-        ) : (
-          <p className="text-sm text-gray-500 italic">No materials added.</p>
-        )}
-      </CardContent>
-    </Card>
-
-    {/* Supplier Card */}
-    <Card className="shadow-sm">
-      <CardHeader className="flex flex-row items-center gap-2">
-        <Users className="w-6 h-6 text-purple-600" />
-        <CardTitle className="text-xl font-semibold text-gray-800">Supplier & Origin</CardTitle>
-      </CardHeader>
-      <CardContent className="space-y-4 pt-4">
-        <div>
-          <p className="text-sm font-medium text-gray-500">Supplier Name</p>
-          <p className="text-gray-900 font-semibold">{formData.supplier.name || 'Not provided'}</p>
-        </div>
-        <div>
-          <p className="text-sm font-medium text-gray-500">Location</p>
-          <p className="text-gray-900 font-semibold">{formData.supplier.location || 'Not provided'}</p>
-        </div>
-      </CardContent>
-    </Card>
-  </div>
-
-  {/* Certifications Card */}
-  <Card className="shadow-sm">
-    <CardHeader className="flex flex-row items-center gap-2">
-      <FileCheck className="w-6 h-6 text-teal-600" />
-      <CardTitle className="text-xl font-semibold text-gray-800">Certifications</CardTitle>
-    </CardHeader>
-    <CardContent>
-      {formData.certifications.filter(cert => cert).length > 0 ? (
-        <div className="flex flex-wrap gap-2">
-          {formData.certifications.filter(cert => cert).map((cert, idx) => (
-            <Badge key={idx} variant="outline" className="text-teal-600 border-teal-600 bg-teal-50 px-4 py-1.5 font-medium">
-              <CheckCircle className="w-4 h-4 mr-2" />{cert}
-            </Badge>
-          ))}
-        </div>
-      ) : (
-        <p className="text-sm text-gray-500 italic">No certifications added.</p>
-      )}
-    </CardContent>
-  </Card>
-</div>
         );
       default:
         return null;
@@ -367,41 +367,38 @@ export default function AddProduct() {
       </div>
 
       {/* Stepper */}
-<div className="w-full mx-auto">
-  <div className="flex items-center justify-between mb-8 relative">
-    {/* Progress Bar */}
-    <div className="absolute top-1/2 -translate-y-1/2 left-0 right-0 h-2 bg-gray-200 rounded-full">
-      <div
-        className="h-full bg-blue-500 rounded-full transition-all duration-500 ease-in-out"
-        style={{ width: `${(currentStep / (steps.length - 1)) * 100}%` }}
-      />
-    </div>
+      <div className="w-full mx-auto">
+        <div className="flex items-center justify-between mb-8 relative">
+          {/* Progress Bar */}
+          <div className="absolute top-1/2 -translate-y-1/2 left-0 right-0 h-2 bg-gray-200 rounded-full">
+            <div
+              className="h-full bg-blue-500 rounded-full transition-all duration-500 ease-in-out"
+              style={{ width: `${(currentStep / (steps.length - 1)) * 100}%` }}
+            />
+          </div>
 
-    {/* Steps */}
-    {steps.map((step, i) => (
-      <div key={i} className="flex flex-col items-center z-10 relative">
-        {/* Step Pill */}
-        <div
-          className={`flex items-center space-x-2 px-4 py-2 rounded-full border transition-colors duration-300 ${
-            i < currentStep
-              ? "bg-green-500 text-white border-green-500"
-              : i === currentStep
-              ? "bg-blue-500 text-white border-blue-500"
-              : "bg-white text-gray-500 border-gray-300"
-          }`}
-        >
-          <span className="flex items-center justify-center">
-            {i < currentStep ? <CheckCircle className="w-5 h-5" /> : step.icon}
-          </span>
-          <span className="font-medium">{step.title}</span>
+          {/* Steps */}
+          {steps.map((step, i) => (
+            <div key={i} className="flex flex-col items-center z-10 relative">
+              {/* Step Pill */}
+              <div
+                className={`flex items-center space-x-2 px-4 py-2 rounded-full border transition-colors duration-300 ${
+                  i < currentStep
+                    ? "bg-green-500 text-white border-green-500"
+                    : i === currentStep
+                      ? "bg-blue-500 text-white border-blue-500"
+                      : "bg-white text-gray-500 border-gray-300"
+                }`}
+              >
+                <span className="flex items-center justify-center">
+                  {i < currentStep ? <CheckCircle className="w-5 h-5" /> : step.icon}
+                </span>
+                <span className="font-medium">{step.title}</span>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
-    ))}
-  </div>
-</div>
-
-
-
 
       {/* Form Section */}
       <div className="w-full mx-auto">
