@@ -18,8 +18,9 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { 
-  Plus, Search, Filter, MoreHorizontal 
+   Search, Filter, MoreHorizontal 
 } from "lucide-react"
+import { Link } from "react-router-dom"
 
 export default function ProductsList() {
   const products = [
@@ -54,10 +55,11 @@ export default function ProductsList() {
       {/* Header Section */}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <h1 className="text-3xl font-bold">Products</h1>
-        <Button className="w-fit">
-          <Plus className="w-4 h-4 mr-2" />
-          Create Passport
-        </Button>
+        <Button asChild>
+      <Link to={"/AddProduct"}  >
+      Add Product
+      </Link>
+    </Button>
       </div>
 
       {/* Summary Cards */}

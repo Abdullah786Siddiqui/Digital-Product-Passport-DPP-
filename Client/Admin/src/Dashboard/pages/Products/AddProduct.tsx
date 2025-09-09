@@ -34,15 +34,18 @@ import {
   Snowflake,
   Type,
   Award,
+  Image as ImageIcon,
+  Upload,
 } from "lucide-react";
 import toast from 'react-hot-toast';
 import { useNavigate } from "react-router-dom";
 
-// 1. Define an interface for the form data structure
+// 1. Update the interface to allow `null` for the image path
 interface ProductFormData {
   name: string;
   category: string;
   description: string;
+  productImage: string | null; // Changed to allow null
   materials: { name: string; percentage: string }[];
   supplier: { name: string; location: string };
   certifications: string[];
@@ -77,12 +80,12 @@ export default function AddProduct() {
     { value: "Tumble Dry Low", icon: Droplet },
   ];
 
-  // 2. Add the ProductFormData type to your useState hook
   const [currentStep, setCurrentStep] = useState(0);
   const [formData, setFormData] = useState<ProductFormData>({
     name: "",
     category: "",
     description: "",
+    productImage: null, // Initialized as null
     materials: [{ name: "", percentage: "" }],
     supplier: { name: "", location: "" },
     certifications: [""],
@@ -126,8 +129,19 @@ export default function AddProduct() {
     }
   };
 
-  // 3. Add types to your handler functions
-  const handleInputChange = (field: keyof ProductFormData, value: string) => {
+  // 2. New handler function for image upload
+  const handleImageUpload = (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setFormData({ ...formData, productImage: reader.result as string });
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleInputChange = (field: keyof Omit<ProductFormData, 'productImage'>, value: string) => {
     setFormData({ ...formData, [field]: value });
   };
 
@@ -197,63 +211,114 @@ export default function AddProduct() {
     switch (currentStep) {
       case 0:
         return (
-          <div className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="space-y-2">
-                <label htmlFor="productName" className="block text-sm font-semibold text-gray-700">Product Name</label>
-                <Input
-                  id="productName"
-                  placeholder="Eco-Friendly Water Bottle"
-                  value={formData.name}
-                  onChange={(e: ChangeEvent<HTMLInputElement>) => handleInputChange("name", e.target.value)}
-                />
-              </div>
-              <div className="space-y-2">
-                <label htmlFor="category" className="block text-sm font-semibold text-gray-700">Category</label>
-                <Select onValueChange={(value) => handleInputChange("category", value)} value={formData.category}>
-                  <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Select a category" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {categories.map((cat) => (
-                      <SelectItem key={cat} value={cat}>{cat}</SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-            <div className="space-y-2">
-              <label htmlFor="description" className="block text-sm font-semibold text-gray-700">Product Description</label>
-              <Textarea
-                id="description"
-                placeholder="Enter a detailed description of the product, including its key features and eco-friendly benefits."
-                value={formData.description}
-                onChange={(e: ChangeEvent<HTMLTextAreaElement>) => handleInputChange("description", e.target.value)}
-              />
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="space-y-2">
-                <label htmlFor="pefScore" className="block text-sm font-semibold text-gray-700">PEF Score</label>
-                <Input
-                  id="pefScore"
-                  type="number"
-                  placeholder="e.g., 1998"
-                  value={formData.pefScore}
-                  onChange={(e: ChangeEvent<HTMLInputElement>) => handleInputChange("pefScore", e.target.value)}
-                />
-              </div>
-              <div className="space-y-2">
-                <label htmlFor="frenchScore" className="block text-sm font-semibold text-gray-700">French Score</label>
-                <Input
-                  id="frenchScore"
-                  type="number"
-                  placeholder="e.g., 100"
-                  value={formData.frenchScore}
-                  onChange={(e: ChangeEvent<HTMLInputElement>) => handleInputChange("frenchScore", e.target.value)}
-                />
-              </div>
-            </div>
+  <div className="space-y-8">
+  <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+    {/* Left Column: Text Inputs and Dropdowns */}
+    <div className="space-y-6">
+      {/* Product Name and Category Section */}
+      <div className="space-y-4">
+        <h3 className="text-xl font-bold text-gray-800 border-b-2 pb-2">Product Details</h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="space-y-2">
+            <label htmlFor="productName" className="block text-sm font-semibold text-gray-700">Product Name</label>
+            <Input
+              id="productName"
+              placeholder="Eco-Friendly Water Bottle"
+              value={formData.name}
+              onChange={(e: ChangeEvent<HTMLInputElement>) => handleInputChange("name", e.target.value)}
+            />
           </div>
+          <div className="space-y-2">
+            <label htmlFor="category" className="block text-sm font-semibold text-gray-700">Category</label>
+            <Select onValueChange={(value) => handleInputChange("category", value)} value={formData.category}>
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Select a category" />
+              </SelectTrigger>
+              <SelectContent>
+                {categories.map((cat) => (
+                  <SelectItem key={cat} value={cat}>{cat}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
+      </div>
+
+      {/* Product Description Section */}
+      <div className="space-y-4">
+        <h3 className="text-xl font-bold text-gray-800 border-b-2 pb-2">Description</h3>
+        <div className="space-y-2">
+          <label htmlFor="description" className="block text-sm font-semibold text-gray-700">Product Description</label>
+          <Textarea
+            id="description"
+            placeholder="Enter a detailed description of the product, including its key features and eco-friendly benefits."
+            value={formData.description}
+            onChange={(e: ChangeEvent<HTMLTextAreaElement>) => handleInputChange("description", e.target.value)}
+          />
+        </div>
+      </div>
+
+      {/* Scores Section */}
+      <div className="space-y-4">
+        <h3 className="text-xl font-bold text-gray-800 border-b-2 pb-2">Sustainability Scores</h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="space-y-2">
+            <label htmlFor="pefScore" className="block text-sm font-semibold text-gray-700">PEF Score</label>
+            <Input
+              id="pefScore"
+              type="number"
+              placeholder="e.g., 1998"
+              value={formData.pefScore}
+              onChange={(e: ChangeEvent<HTMLInputElement>) => handleInputChange("pefScore", e.target.value)}
+            />
+          </div>
+          <div className="space-y-2">
+            <label htmlFor="frenchScore" className="block text-sm font-semibold text-gray-700">French Score</label>
+            <Input
+              id="frenchScore"
+              type="number"
+              placeholder="e.g., 100"
+              value={formData.frenchScore}
+              onChange={(e: ChangeEvent<HTMLInputElement>) => handleInputChange("frenchScore", e.target.value)}
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    {/* Right Column: Image Upload Section */}
+    <div className="space-y-4">
+      <h3 className="text-xl font-bold text-gray-800 border-b-2 pb-2 flex items-center gap-2">
+        <ImageIcon className="w-5 h-5" /> Product Image
+      </h3>
+      <div className="w-full h-96 flex items-center justify-center p-6 bg-gray-100 border-2 border-dashed border-gray-300 rounded-xl transition-colors duration-200 hover:bg-gray-200 cursor-pointer shadow-inner">
+        <label htmlFor="image-upload" className="flex flex-col items-center justify-center space-y-3 cursor-pointer">
+          {formData.productImage ? (
+            <>
+              <img src={formData.productImage} alt="Product Preview" className="w-full max-h-64 object-contain rounded-lg shadow-lg" />
+              <Button variant="outline" className="flex items-center gap-2 mt-4 bg-white">
+                <Upload className="w-4 h-4" /> Change Image
+              </Button>
+            </>
+          ) : (
+            <div className="flex flex-col items-center space-y-2 text-gray-500">
+              <Upload className="w-12 h-12 text-gray-400" />
+              <span className="font-semibold text-lg">Click to upload</span>
+              <span className="text-sm">PNG, JPG, GIF up to 10MB</span>
+            </div>
+          )}
+          <Input
+            id="image-upload"
+            type="file"
+            className="sr-only"
+            accept="image/*"
+            onChange={handleImageUpload}
+          />
+        </label>
+      </div>
+    </div>
+  </div>
+</div>
         );
       case 1:
         return (
@@ -366,7 +431,7 @@ export default function AddProduct() {
                 />
               </div>
               <div className="space-y-2">
-                <label htmlFor="waterUsage" className="block text-sm font-semibold text-gray-700 flex items-center gap-2"><Droplet className="w-4 h-4" /> Water Usage (in Liters)</label>
+                <label htmlFor="waterUsage" className=" text-sm font-semibold text-gray-700 flex items-center gap-2"><Droplet className="w-4 h-4" /> Water Usage (in Liters)</label>
                 <Input
                   id="waterUsage"
                   type="number"
@@ -376,7 +441,7 @@ export default function AddProduct() {
                 />
               </div>
               <div className="space-y-2">
-                <label htmlFor="energyUsage" className="block text-sm font-semibold text-gray-700 flex items-center gap-2"><Power className="w-4 h-4" /> Energy Usage (in kWh)</label>
+                <label htmlFor="energyUsage" className=" text-sm font-semibold text-gray-700 flex items-center gap-2"><Power className="w-4 h-4" /> Energy Usage (in kWh)</label>
                 <Input
                   id="energyUsage"
                   type="number"
@@ -406,151 +471,169 @@ export default function AddProduct() {
         );
       case 5:
         return (
-          <div className="space-y-8">
-            <h3 className="text-3xl font-bold text-gray-800 border-b-2 pb-4 mb-6">Review & Confirm</h3>
+    <div className="space-y-8">
+    <h3 className="text-3xl font-bold text-gray-800 border-b-2 pb-4 mb-6">Review & Confirm</h3>
 
-            {/* General & PEF Score Card */}
-            <Card className="shadow-sm">
-              <CardHeader className="flex flex-row items-center gap-2">
-                <Package className="w-6 h-6 text-blue-600" />
-                <CardTitle className="text-xl font-semibold text-gray-800">General Information</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4 pt-4">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-4">
-                  <div>
-                    <p className="text-sm font-medium text-gray-500">Product Name</p>
-                    <p className="text-gray-900 font-semibold">{formData.name || 'Not provided'}</p>
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium text-gray-500">Category</p>
-                    <p className="text-gray-900 font-semibold">{formData.category || 'Not provided'}</p>
-                  </div>
-                  <div className="md:col-span-2">
-                    <p className="text-sm font-medium text-gray-500">Description</p>
-                    <p className="text-gray-900">{formData.description || 'Not provided'}</p>
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium text-gray-500">PEF Score</p>
-                    <Badge variant="outline" className="text-teal-700 border-teal-600 bg-teal-50/50 font-semibold">{formData.pefScore || 'N/A'} ppts</Badge>
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium text-gray-500">French Score</p>
-                    <Badge variant="outline" className="text-teal-700 border-teal-600 bg-teal-50/50 font-semibold">{formData.frenchScore || 'N/A'} ppts</Badge>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Materials and Supplier Section */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              <Card className="shadow-sm">
-                <CardHeader className="flex flex-row items-center gap-2">
-                  <Factory className="w-6 h-6 text-green-600" />
-                  <CardTitle className="text-xl font-semibold text-gray-800">Materials</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  {formData.materials.filter(mat => mat.name).length > 0 ? (
-                    <div className="space-y-3">
-                      {formData.materials.filter(mat => mat.name).map((mat, idx) => (
-                        <div key={idx} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                          <span className="text-gray-900">{mat.name}</span>
-                          <Badge variant="secondary" className="bg-gray-200 text-gray-800 font-medium">{mat.percentage}%</Badge>
-                        </div>
-                      ))}
+    {/* Product Summary & General Information */}
+    <Card className="">
+        <CardHeader className="flex flex-row items-center gap-4 pb-4 border-b">
+            <Package className="w-8 h-8 text-blue-600" />
+            <div className="flex-1">
+                <CardTitle className="text-xl md:text-2xl font-bold text-gray-800">{formData.name || 'Product Name Not Provided'}</CardTitle>
+                <p className="text-sm text-gray-500 mt-1">General product details and scores</p>
+            </div>
+        </CardHeader>
+        <CardContent className="p-6 md:p-8">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-start">
+                {/* Product Image Section */}
+                {formData.productImage && (
+                    <div className="md:col-span-1">
+                        <p className="text-sm font-medium text-gray-500 mb-2">Product Image</p>
+                        <img src={formData.productImage} alt={formData.name || 'Product Image'} className="w-full h-auto max-h-56 object-cover rounded-xl shadow-md" />
                     </div>
-                  ) : (
-                    <p className="text-sm text-gray-500 italic">No materials added.</p>
-                  )}
-                </CardContent>
-              </Card>
+                )}
+                
+                {/* General Details & Description */}
+                <div className="md:col-span-2 space-y-4">
+                    <div>
+                        <p className="text-sm font-medium text-gray-500">Category</p>
+                        <p className="text-gray-900 font-semibold">{formData.category || 'Not provided'}</p>
+                    </div>
+                    <div>
+                        <p className="text-sm font-medium text-gray-500">Description</p>
+                        <p className="text-gray-700 leading-relaxed mt-1">{formData.description || 'Not provided'}</p>
+                    </div>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 border-t mt-4">
+                        <div>
+                            <p className="text-sm font-medium text-gray-500">PEF Score</p>
+                            <Badge variant="outline" className="text-teal-700 border-teal-600 bg-teal-50/50 font-bold text-base mt-1">{formData.pefScore || 'N/A'} ppts</Badge>
+                        </div>
+                        <div>
+                            <p className="text-sm font-medium text-gray-500">French Score</p>
+                            <Badge variant="outline" className="text-teal-700 border-teal-600 bg-teal-50/50 font-bold text-base mt-1">{formData.frenchScore || 'N/A'} ppts</Badge>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </CardContent>
+    </Card>
 
-              <Card className="shadow-sm">
-                <CardHeader className="flex flex-row items-center gap-2">
-                  <Users className="w-6 h-6 text-purple-600" />
-                  <CardTitle className="text-xl font-semibold text-gray-800">Supplier & Origin</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4 pt-4">
-                  <div>
-                    <p className="text-sm font-medium text-gray-500">Supplier Name</p>
-                    <p className="text-gray-900 font-semibold">{formData.supplier.name || 'Not provided'}</p>
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium text-gray-500">Location</p>
-                    <p className="text-gray-900 font-semibold">{formData.supplier.location || 'Not provided'}</p>
-                  </div>
-                  <div>
+    {/* Materials & Supplier */}
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <Card className="shadow-sm border-gray-200">
+            <CardHeader className="flex flex-row items-center gap-2 pb-4 border-b">
+                <Factory className="w-6 h-6 text-green-600" />
+                <CardTitle className="text-xl font-semibold text-gray-800">Materials</CardTitle>
+            </CardHeader>
+            <CardContent className="p-4">
+                {formData.materials.filter(mat => mat.name).length > 0 ? (
+                    <div className="space-y-3">
+                        {formData.materials.filter(mat => mat.name).map((mat, idx) => (
+                            <div key={idx} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg border">
+                                <span className="text-gray-900 font-medium">{mat.name}</span>
+                                <Badge variant="secondary" className="bg-gray-200 text-gray-800 font-medium">{mat.percentage}%</Badge>
+                            </div>
+                        ))}
+                    </div>
+                ) : (
+                    <p className="text-sm text-gray-500 italic">No materials added.</p>
+                )}
+            </CardContent>
+        </Card>
+
+        <Card className="shadow-sm border-gray-200">
+            <CardHeader className="flex flex-row items-center gap-2 pb-4 border-b">
+                <Users className="w-6 h-6 text-purple-600" />
+                <CardTitle className="text-xl font-semibold text-gray-800">Supplier & Origin</CardTitle>
+            </CardHeader>
+            <CardContent className="p-6 space-y-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <p className="text-sm font-medium text-gray-500">Supplier Name</p>
+                        <p className="text-gray-900 font-semibold">{formData.supplier.name || 'Not provided'}</p>
+                    </div>
+                    <div>
+                        <p className="text-sm font-medium text-gray-500">Location</p>
+                        <p className="text-gray-900 font-semibold">{formData.supplier.location || 'Not provided'}</p>
+                    </div>
+                </div>
+                <div>
                     <p className="text-sm font-medium text-gray-500">Productive Date</p>
                     <p className="text-gray-900 font-semibold">{formData.productiveDate || 'Not provided'}</p>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
+                </div>
+            </CardContent>
+        </Card>
+    </div>
 
-            {/* Certifications and Sustainability Section */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              <Card className="shadow-sm">
-                <CardHeader className="flex flex-row items-center gap-2">
-                  <FileCheck className="w-6 h-6 text-teal-600" />
-                  <CardTitle className="text-xl font-semibold text-gray-800">Certifications</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  {formData.certifications.filter(cert => cert).length > 0 ? (
+    {/* Sustainability & Certifications */}
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <Card className="shadow-sm border-gray-200">
+            <CardHeader className="flex flex-row items-center gap-2 pb-4 border-b">
+                <Leaf className="w-6 h-6 text-green-700" />
+                <CardTitle className="text-xl font-semibold text-gray-800">Sustainability</CardTitle>
+            </CardHeader>
+            <CardContent className="p-6 space-y-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <p className="text-sm font-medium text-gray-500 flex items-center gap-1"><Cloud className="w-4 h-4 text-green-700" /> Carbon Footprint</p>
+                        <p className="text-gray-900 font-semibold">{formData.carbonFootprint || 'N/A'} kg CO2e</p>
+                    </div>
+                    <div>
+                        <p className="text-sm font-medium text-gray-500 flex items-center gap-1"><Droplet className="w-4 h-4 text-blue-600" /> Water Usage</p>
+                        <p className="text-gray-900 font-semibold">{formData.waterUsage || 'N/A'} Liters</p>
+                    </div>
+                    <div>
+                        <p className="text-sm font-medium text-gray-500 flex items-center gap-1"><Power className="w-4 h-4 text-yellow-500" /> Energy Usage</p>
+                        <p className="text-gray-900 font-semibold">{formData.energyUsage || 'N/A'} kWh</p>
+                    </div>
+                </div>
+            </CardContent>
+        </Card>
+
+        <Card className="shadow-sm border-gray-200">
+            <CardHeader className="flex flex-row items-center gap-2 pb-4 border-b">
+                <FileCheck className="w-6 h-6 text-teal-600" />
+                <CardTitle className="text-xl font-semibold text-gray-800">Certifications & Care</CardTitle>
+            </CardHeader>
+            <CardContent className="p-6 space-y-4">
+                <div>
+                    <p className="text-sm font-medium text-gray-500 mb-2">Certifications</p>
+                    {formData.certifications.filter(cert => cert).length > 0 ? (
+                        <div className="flex flex-wrap gap-2">
+                            {formData.certifications.filter(cert => cert).map((cert, idx) => (
+                                <Badge key={idx} variant="outline" className="text-teal-600 border-teal-600 bg-teal-50 px-4 py-1.5 font-medium">
+                                    <Award className="w-4 h-4 mr-2" />{cert}
+                                </Badge>
+                            ))}
+                        </div>
+                    ) : (
+                        <p className="text-sm text-gray-500 italic">No certifications added.</p>
+                    )}
+                </div>
+
+                <div>
+                    <p className="text-sm font-medium text-gray-500 mb-2">Care Instructions</p>
                     <div className="flex flex-wrap gap-2">
-                      {formData.certifications.filter(cert => cert).map((cert, idx) => (
-                        <Badge key={idx} variant="outline" className="text-teal-600 border-teal-600 bg-teal-50 px-4 py-1.5 font-medium">
-                          <Award className="w-4 h-4 mr-2" />{cert}
-                        </Badge>
-                      ))}
-                    </div>
-                  ) : (
-                    <p className="text-sm text-gray-500 italic">No certifications added.</p>
-                  )}
-                </CardContent>
-              </Card>
-
-              <Card className="shadow-sm">
-                <CardHeader className="flex flex-row items-center gap-2">
-                  <Leaf className="w-6 h-6 text-green-700" />
-                  <CardTitle className="text-xl font-semibold text-gray-800">Sustainability Impact</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4 pt-4">
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div>
-                      <p className="text-sm font-medium text-gray-500 flex items-center gap-1"><Cloud className="w-4 h-4 text-green-700" /> Carbon Footprint</p>
-                      <p className="text-gray-900 font-semibold">{formData.carbonFootprint || 'N/A'} kg CO2e</p>
-                    </div>
-                    <div>
-                      <p className="text-sm font-medium text-gray-500 flex items-center gap-1"><Droplet className="w-4 h-4 text-blue-600" /> Water Usage</p>
-                      <p className="text-gray-900 font-semibold">{formData.waterUsage || 'N/A'} Liters</p>
-                    </div>
-                    <div>
-                      <p className="text-sm font-medium text-gray-500 flex items-center gap-1"><Power className="w-4 h-4 text-yellow-500" /> Energy Usage</p>
-                      <p className="text-gray-900 font-semibold">{formData.energyUsage || 'N/A'} kWh</p>
-                    </div>
-                    <div>
-                      <p className="text-sm font-medium text-gray-500">Care Instructions</p>
-                      <div className="flex flex-wrap gap-2 mt-1">
                         {formData.careInstructions.length > 0 ? (
-                          formData.careInstructions.map((instruction, idx) => {
-                            const iconComponent = careInstructionsOptions.find(item => item.value === instruction)?.icon;
-                            const Icon = iconComponent;
-                            return (
-                              <Badge key={idx} className="bg-gray-200 text-gray-800 font-medium flex items-center gap-1">
-                                {Icon && <Icon className="w-3 h-3" />}
-                                {instruction}
-                              </Badge>
-                            );
-                          })
+                            formData.careInstructions.map((instruction, idx) => {
+                                const iconComponent = careInstructionsOptions.find(item => item.value === instruction)?.icon;
+                                const Icon = iconComponent;
+                                return (
+                                    <Badge key={idx} variant="secondary" className="bg-gray-200 text-gray-800 font-medium flex items-center gap-1">
+                                        {Icon && <Icon className="w-4 h-4" />}
+                                        {instruction}
+                                    </Badge>
+                                );
+                            })
                         ) : (
-                          <span className="text-gray-500 italic text-sm">Not provided</span>
+                            <span className="text-gray-500 italic text-sm">Not provided</span>
                         )}
-                      </div>
                     </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-          </div>
+                </div>
+            </CardContent>
+        </Card>
+    </div>
+</div>
         );
       default:
         return null;
