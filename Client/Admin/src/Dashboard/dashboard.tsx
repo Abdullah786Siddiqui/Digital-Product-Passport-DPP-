@@ -1,5 +1,4 @@
 import { AppSidebar } from "@/components/app-sidebar";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   Dialog,
   DialogContent,
@@ -12,7 +11,7 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
-import { ArrowRight, Bell, Sun, UserRoundPlus } from "lucide-react";
+import { ArrowRight, Bell, Sun } from "lucide-react";
 import { Outlet } from "react-router-dom";
 import {
   NavigationMenu,
@@ -42,11 +41,7 @@ export default function Dashboard() {
           <Dialog>
   <DialogTrigger>
   {/* Search Input */}
-<Input
-  type="text"
-  placeholder="Type to search..."
-  className="w-[300px]  px-4 py-2 text-base border border-input rounded-md focus:outline-none focus:ring-2 focus:ring-ring focus:border-ring"
-/>
+
 
   </DialogTrigger>
  <DialogContent showCloseButton={false} className="sm:max-w-lg w-full p-4">
@@ -98,35 +93,8 @@ export default function Dashboard() {
               <Sun className="h-5 w-5" />
             </div>
 
-            <div className="*:data-[slot=avatar]:ring-background flex -space-x-2 *:data-[slot=avatar]:ring-2 *:data-[slot=avatar]:grayscale">
-              <Avatar>
-                <AvatarImage
-                  src="https://github.com/shadcn.png"
-                  alt="@shadcn"
-                />
-                <AvatarFallback>CN</AvatarFallback>
-              </Avatar>
-              <Avatar>
-                <AvatarImage
-                  src="https://github.com/leerob.png"
-                  alt="@leerob"
-                />
-                <AvatarFallback>LR</AvatarFallback>
-              </Avatar>
-              <Avatar>
-                <AvatarImage
-                  src="https://github.com/evilrabbit.png"
-                  alt="@evilrabbit"
-                />
-                <AvatarFallback>ER</AvatarFallback>
-              </Avatar>
-            </div>
-            <div 
-  className="p-1.5 border flex items-center gap-1 rounded-md cursor-pointer hover:bg-accent"
->
-  <UserRoundPlus className="h-5 w-5" />
-  <span className="font-semibold">Invite</span>
-</div>
+          
+      
 
           </div>
         </header>

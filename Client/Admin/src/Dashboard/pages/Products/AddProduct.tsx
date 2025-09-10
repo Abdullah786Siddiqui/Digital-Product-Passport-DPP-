@@ -814,35 +814,73 @@ export default function AddProduct() {
         </Button>
       </div>
 
-      <div className="w-full mx-auto">
-        <div className="flex items-center justify-between mb-8 relative">
-          <div className="absolute top-1/2 -translate-y-1/2 left-0 right-0 h-2 bg-gray-200 rounded-full">
+  <div className="w-full mx-auto p-4 md:p-0">
+    {/* Desktop Stepper (Hidden on mobile) */}
+    <div className="hidden md:flex items-center justify-between mb-8 relative">
+        <div className="absolute top-1/2 -translate-y-1/2 left-0 right-0 h-2 bg-gray-200 rounded-full">
             <div
-              className="h-full bg-blue-500 rounded-full transition-all duration-500 ease-in-out"
-              style={{ width: `${(currentStep / (steps.length - 1)) * 100}%` }}
+                className="h-full bg-blue-500 rounded-full transition-all duration-500 ease-in-out"
+                style={{ width: `${(currentStep / (steps.length - 1)) * 100}%` }}
             />
-          </div>
-
-          {steps.map((step, i) => (
-            <div key={i} className="flex flex-col items-center z-10 relative">
-              <div
-                className={`flex items-center space-x-2 px-4 py-2 rounded-full border transition-colors duration-300 ${
-                  i < currentStep
-                    ? "bg-green-500 text-white border-green-500"
-                    : i === currentStep
-                    ? "bg-blue-500 text-white border-blue-500"
-                    : "bg-white text-gray-500 border-gray-300"
-                }`}
-              >
-                <span className="flex items-center justify-center">
-                  {i < currentStep ? <CheckCircle className="w-5 h-5" /> : step.icon}
-                </span>
-                <span className="font-medium">{step.title}</span>
-              </div>
-            </div>
-          ))}
         </div>
-      </div>
+
+        {steps.map((step, i) => (
+            <div key={i} className="flex flex-col items-center z-10 relative">
+                <div
+                    className={`flex items-center space-x-2 px-4 py-2 rounded-full border transition-colors duration-300 ${
+                        i < currentStep
+                            ? "bg-green-500 text-white border-green-500"
+                            : i === currentStep
+                                ? "bg-blue-500 text-white border-blue-500"
+                                : "bg-white text-gray-500 border-gray-300"
+                    }`}
+                >
+                    <span className="flex items-center justify-center">
+                        {i < currentStep ? <CheckCircle className="w-5 h-5" /> : step.icon}
+                    </span>
+                    <span className="font-medium">{step.title}</span>
+                </div>
+            </div>
+        ))}
+    </div>
+
+    {/* Mobile Stepper with Circular Progress (Hidden on desktop) */}
+    <div className="md:hidden flex flex-col items-center justify-center space-y-4 mb-8">
+        <div className="relative w-20 h-20">
+            {/* SVG for Circular Progress */}
+            <svg className="w-full h-full" viewBox="0 0 100 100">
+                <circle
+                    className="text-gray-200 stroke-current"
+                    strokeWidth="8"
+                    cx="50"
+                    cy="50"
+                    r="40"
+                    fill="transparent"
+                />
+                <circle
+                    className="text-blue-500 stroke-current transition-all duration-500 ease-in-out"
+                    strokeWidth="8"
+                    strokeLinecap="round"
+                    cx="50"
+                    cy="50"
+                    r="40"
+                    fill="transparent"
+                    strokeDasharray="251.2" // Circumference of the circle (2 * pi * 40)
+                    strokeDashoffset={251.2 - (251.2 * ((currentStep + 1) / steps.length))}
+                />
+            </svg>
+            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center">
+                <span className="text-xl font-bold text-gray-800">{currentStep + 1}</span>
+                <span className="text-sm text-gray-500">/{steps.length}</span>
+            </div>
+        </div>
+        <p className="text-lg font-semibold text-gray-700 mt-2">{steps[currentStep].title}</p>
+        <div className="flex w-full justify-between items-center text-gray-500 text-xs mt-2">
+            <span>{steps[0].title}</span>
+            <span>{steps[steps.length - 1].title}</span>
+        </div>
+    </div>
+</div>
 
       <div className="w-full mx-auto">
         <Card className="shadow-lg">

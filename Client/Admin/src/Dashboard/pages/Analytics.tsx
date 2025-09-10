@@ -5,12 +5,10 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
 import {
   Package,
   CheckCircle,
   AlertTriangle,
-  Users,
   Clock,
 } from "lucide-react"
 import {
@@ -57,19 +55,18 @@ export default function Analytics() {
   const COLORS = ["#4ade80", "#f87171", "#facc15"]
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-2 space-y-6">
       {/* Top Actions with filters */}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <h1 className="text-2xl font-bold">Dashboard Overview</h1>
         <div className="flex gap-2">
-          <Input placeholder="Search products..." className="w-56" />
-          <Button variant="outline">This Month</Button>
+         
           <Button>+ Create Passport</Button>
         </div>
       </div>
 
       {/* KPI Cards */}
-      <div className="grid gap-4 md:grid-cols-4">
+      <div className="grid gap-4 md:grid-cols-3">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle>Total Products</CardTitle>
@@ -105,16 +102,7 @@ export default function Analytics() {
           </CardContent>
         </Card>
 
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle>Suppliers</CardTitle>
-            <Users className="h-5 w-5 text-blue-500" />
-          </CardHeader>
-          <CardContent>
-            <p className="text-3xl font-bold">85</p>
-            <p className="text-sm text-muted-foreground">Trusted partners</p>
-          </CardContent>
-        </Card>
+     
 
     
       </div>
