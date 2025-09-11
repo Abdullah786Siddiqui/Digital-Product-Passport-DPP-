@@ -143,6 +143,7 @@ export default function AddProduct() {
     const file = event.target.files?.[0];
     if (file) {
       const reader = new FileReader();
+      
       reader.onloadend = () => {
         setFormData({ ...formData, productImage: reader.result as string });
       };
@@ -242,13 +243,28 @@ export default function AddProduct() {
     });
   };
 
-  const handleSubmit = () => {
-    console.log("Submitting product:", formData);
-    toast.success('Product submitted successfully!');
-    setTimeout(() => {
-      navigate('/ProductsList');
-    }, 1500);
-  };
+const handleSubmit = () => {
+  console.log("Submitting product:", formData);
+
+  // Get old data from localStorage safely
+  const stored = localStorage.getItem("products");
+  const existingProducts: typeof formData[] = stored ? JSON.parse(stored) : [];
+
+  // Add new product
+  const updatedProducts = [...existingProducts, formData];
+
+  // Save back to localStorage
+  localStorage.setItem("products", JSON.stringify(updatedProducts));
+
+  // Success message
+  toast.success("Product submitted successfully!");
+
+  // Redirect after delay
+  setTimeout(() => {
+    navigate("/ProductsList");
+  }, 1500);
+};
+
 
   const renderStepContent = () => {
     switch (currentStep) {
@@ -806,7 +822,7 @@ export default function AddProduct() {
   };
 
   return (
-    <div className="p-4 md:p-8 space-y-8 bg-gray-50 min-h-screen">
+    <div className="space-y-8 min-h-screen py-2">
       <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
         <h1 className="text-3xl font-bold text-gray-800">Add New Product</h1>
         <Button variant="outline" className="text-gray-700 border-gray-300">

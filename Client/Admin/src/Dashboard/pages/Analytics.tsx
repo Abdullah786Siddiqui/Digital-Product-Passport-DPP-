@@ -1,19 +1,21 @@
 import {
   Card,
   CardContent,
+  CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import {
   Package,
   CheckCircle,
   AlertTriangle,
-  Clock,
-} from "lucide-react"
+  PlusCircle,
+  List,
+} from "lucide-react";
 import {
-  LineChart,
-  Line,
+  AreaChart,
+  Area,
   XAxis,
   YAxis,
   CartesianGrid,
@@ -23,185 +25,304 @@ import {
   Pie,
   Cell,
   Legend,
-  BarChart,
-  Bar,
-} from "recharts"
-import { Progress } from "@/components/ui/progress"
+} from "recharts";
+import { Progress } from "@/components/ui/progress";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { Badge } from "@/components/ui/badge";
+import { Link } from "react-router-dom";
 
-export default function Analytics() {
-  // Fake data
-  const lineData = [
-    { month: "Jan", created: 40, completed: 30 },
-    { month: "Feb", created: 60, completed: 50 },
-    { month: "Mar", created: 80, completed: 65 },
-    { month: "Apr", created: 100, completed: 90 },
-    { month: "May", created: 70, completed: 60 },
-  ]
+// Fake data for the dashboard
+const areaData = [
+  { month: "Jan", created: 400, completed: 300 },
+  { month: "Feb", created: 600, completed: 500 },
+  { month: "Mar", created: 800, completed: 650 },
+  { month: "Apr", created: 1000, completed: 900 },
+  { month: "May", created: 700, completed: 600 },
+  { month: "Jun", created: 950, completed: 880 },
+];
 
-  const complianceData = [
-    { name: "Compliant", value: 70 },
-    { name: "Non-Compliant", value: 20 },
-    { name: "Expiring Soon", value: 10 },
-  ]
+const incompleteReasons = [
+  { name: "Missing Data", value: 45 },
+  { name: "Pending Approval", value: 30 },
+  { name: "Draft", value: 20 },
+];
 
-  const materialData = [
-    { name: "Organic Cotton", usage: 120 },
-    { name: "Recycled Plastic", usage: 95 },
-    { name: "Aluminum", usage: 80 },
-    { name: "Glass", usage: 60 },
-    { name: "Bamboo", usage: 45 },
-  ]
+const recentProducts = [
+  {
+    id: "P-001",
+    name: "Recycled Hoodie",
+    status: "Complete",
+    date: "2025-06-15",
+  },
+  {
+    id: "P-002",
+    name: "Smart Lamp Eco",
+    status: "Incomplete",
+    date: "2025-06-14",
+    reason: "Missing Data",
+  },
+  {
+    id: "P-003",
+    name: "Bamboo Utensil Set",
+    status: "Complete",
+    date: "2025-06-12",
+  },
+  {
+    id: "P-004",
+    name: "Modular Chair",
+    status: "Incomplete",
+    date: "2025-06-11",
+    reason: "Pending Approval",
+  },
+  {
+    id: "P-005",
+    name: "Sustainable Backpack",
+    status: "Complete",
+    date: "2025-06-10",
+  },
+];
 
-  const COLORS = ["#4ade80", "#f87171", "#facc15"]
+const COLORS = ["#facc15", "#f87171", "#94a3b8", "#e2e8f0"];
+
+export default function Dashboard() {
+  const totalProducts = 2450;
+  const completedProducts = 1980;
+  const incompleteProducts = totalProducts - completedProducts;
+  const completedPercentage = (completedProducts / totalProducts) * 100;
 
   return (
-    <div className="p-2 space-y-6">
-      {/* Top Actions with filters */}
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-        <h1 className="text-2xl font-bold">Dashboard Overview</h1>
-        <div className="flex gap-2">
-         
-          <Button>+ Create Passport</Button>
+    <div className="py-2 space-y-8   min-h-screen">
+      {/* Header and Actions */}
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 pb-4 border-b border-gray-200 dark:border-gray-800 ">
+        <div>
+          <h1 className="text-3xl font-bold mb-1">Digital Product Passport </h1>
+          <p className="text-muted-foreground text-sm">
+            A complete overview of your product lifecycle and sustainability
+            data.
+          </p>
+        </div>
+        <div className="flex flex-col md:flex-row gap-2 items-center">
+          <Button asChild>
+            <Link to={"/AddProduct"}>
+              <PlusCircle className="h-4 w-4 mr-2" />
+              Create Passport
+            </Link>
+          </Button>
         </div>
       </div>
 
-      {/* KPI Cards */}
-      <div className="grid gap-4 md:grid-cols-3">
+      {/* Main KPI Cards with Sparkline charts */}
+      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        {/* Total Products Card */}
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle>Total Products</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              Total Products
+            </CardTitle>
             <Package className="h-5 w-5 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <p className="text-3xl font-bold">2,450</p>
-            <p className="text-sm text-muted-foreground">+120 this month</p>
+            <div className="text-4xl font-bold">{totalProducts}</div>
+            <p className="text-xs text-muted-foreground mt-1">
+              +120 this month
+            </p>
           </CardContent>
         </Card>
 
+        {/* Complete Products Card */}
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle>Completed</CardTitle>
+            <CardTitle className="text-sm font-medium">Completed</CardTitle>
             <CheckCircle className="h-5 w-5 text-green-500" />
           </CardHeader>
           <CardContent>
-            <p className="text-3xl font-bold">1,980</p>
-            <Progress value={81} className="mt-2" />
-            <p className="text-sm text-muted-foreground">81% done</p>
+            <div className="text-4xl font-bold">{completedProducts}</div>
+            <Progress
+              value={completedPercentage}
+              className="mt-2 h-2"
+              // indicatorColor="bg-green-500"
+            />
+            <p className="text-xs text-muted-foreground mt-1">
+              {completedPercentage.toFixed(1)}% of total
+            </p>
           </CardContent>
         </Card>
 
+        {/* Incomplete Products Card */}
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle>Incomplete</CardTitle>
+            <CardTitle className="text-sm font-medium">Incomplete</CardTitle>
             <AlertTriangle className="h-5 w-5 text-yellow-500" />
           </CardHeader>
           <CardContent>
-            <p className="text-3xl font-bold">128</p>
-            <Progress value={19} className="mt-2" />
-            <p className="text-sm text-muted-foreground">Need attention</p>
+            <div className="text-4xl font-bold">{incompleteProducts}</div>
+            <p className="text-xs text-muted-foreground mt-1">
+              128 need attention
+            </p>
           </CardContent>
         </Card>
-
-     
-
-    
       </div>
 
       {/* Charts Row */}
-      <div className="grid gap-6 md:grid-cols-3">
-        <Card className="col-span-2">
+      <div className="grid gap-6 lg:grid-cols-3">
+        {/* Area Chart - Creation Trend */}
+        <Card className="lg:col-span-2">
           <CardHeader>
-            <CardTitle>Created vs Completed</CardTitle>
+            <CardTitle>Passport Creation Trend</CardTitle>
+            <CardDescription>
+              Number of passports created vs. completed over the last 6 months.
+            </CardDescription>
           </CardHeader>
-          <CardContent className="h-72">
+          <CardContent className="h-80">
             <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={lineData}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="month" />
-                <YAxis />
+              <AreaChart data={areaData}>
+                <defs>
+                  <linearGradient id="colorCreated" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#60a5fa" stopOpacity={0.8} />
+                    <stop offset="95%" stopColor="#60a5fa" stopOpacity={0.1} />
+                  </linearGradient>
+                  <linearGradient
+                    id="colorCompleted"
+                    x1="0"
+                    y1="0"
+                    x2="0"
+                    y2="1"
+                  >
+                    <stop offset="5%" stopColor="#34d399" stopOpacity={0.8} />
+                    <stop offset="95%" stopColor="#34d399" stopOpacity={0.1} />
+                  </linearGradient>
+                </defs>
+                <CartesianGrid
+                  strokeDasharray="3 3"
+                  className="stroke-gray-200 dark:stroke-gray-700"
+                />
+                <XAxis dataKey="month" className="text-xs" />
+                <YAxis className="text-xs" />
                 <Tooltip />
-                <Line type="monotone" dataKey="created" stroke="#60a5fa" strokeWidth={2} />
-                <Line type="monotone" dataKey="completed" stroke="#34d399" strokeWidth={2} />
-              </LineChart>
+                <Legend />
+                <Area
+                  type="monotone"
+                  dataKey="created"
+                  name="Created"
+                  stroke="#60a5fa"
+                  fillOpacity={1}
+                  fill="url(#colorCreated)"
+                />
+                <Area
+                  type="monotone"
+                  dataKey="completed"
+                  name="Completed"
+                  stroke="#34d399"
+                  fillOpacity={1}
+                  fill="url(#colorCompleted)"
+                />
+              </AreaChart>
             </ResponsiveContainer>
           </CardContent>
         </Card>
 
+        {/* Incomplete Reasons Donut Chart */}
         <Card>
           <CardHeader>
-            <CardTitle>Compliance Status</CardTitle>
+            <CardTitle>Incomplete Passports</CardTitle>
+            <CardDescription>
+              Breakdown by reason for incomplete passports.
+            </CardDescription>
           </CardHeader>
-          <CardContent className="h-72 flex items-center justify-center">
+          <CardContent className="h-80 flex items-center justify-center">
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
                 <Pie
-                  data={complianceData}
+                  data={incompleteReasons}
                   cx="50%"
                   cy="50%"
+                  innerRadius={60}
                   outerRadius={90}
+                  fill="#8884d8"
+                  paddingAngle={5}
                   dataKey="value"
-                  label
+                  label={({ name, value }) => `${name}: ${value}`}
                 >
-               {complianceData.map((_, index) => (
-  <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-))}
-
+                  {incompleteReasons.map((_, index) => (
+                    <Cell
+                      key={`cell-${index}`}
+                      fill={COLORS[index % COLORS.length]}
+                    />
+                  ))}
                 </Pie>
-                <Legend />
                 <Tooltip />
+                <Legend />
               </PieChart>
             </ResponsiveContainer>
           </CardContent>
         </Card>
       </div>
 
-      {/* Materials Bar Chart */}
+      {/* Detailed Product List Table */}
       <Card>
-        <CardHeader>
-          <CardTitle>Top Materials Used</CardTitle>
+        <CardHeader className="flex flex-row items-center justify-between">
+          <div>
+            <CardTitle>Recent Passports</CardTitle>
+            <CardDescription>
+              A list of recently created or updated Digital Product Passports.
+            </CardDescription>
+          </div>
+          <Button variant="outline" className="text-sm">
+            <List className="h-4 w-4 mr-2" />
+            View All
+          </Button>
         </CardHeader>
-        <CardContent className="h-72">
-          <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={materialData}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="name" />
-              <YAxis />
-              <Tooltip />
-              <Bar dataKey="usage" fill="#60a5fa" />
-            </BarChart>
-          </ResponsiveContainer>
-        </CardContent>
-      </Card>
-
-      {/* Activity Feed */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Recent Activity</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="flex items-start gap-3">
-            <Clock className="h-5 w-5 text-blue-500 mt-1" />
-            <div>
-              <p className="font-medium">New passport created: Eco-Friendly Water Bottle</p>
-              <p className="text-sm text-muted-foreground">2 hours ago</p>
-            </div>
-          </div>
-          <div className="flex items-start gap-3">
-            <CheckCircle className="h-5 w-5 text-green-500 mt-1" />
-            <div>
-              <p className="font-medium">Smart Home Hub passport published</p>
-              <p className="text-sm text-muted-foreground">Yesterday</p>
-            </div>
-          </div>
-          <div className="flex items-start gap-3">
-            <AlertTriangle className="h-5 w-5 text-yellow-500 mt-1" />
-            <div>
-              <p className="font-medium">45 products missing material composition</p>
-              <p className="text-sm text-muted-foreground">3 days ago</p>
-            </div>
-          </div>
+        <CardContent>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Product</TableHead>
+                <TableHead>Status</TableHead>
+                <TableHead>Reason</TableHead>
+                <TableHead className="text-right">Date</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {recentProducts.map((product) => (
+                <TableRow key={product.id}>
+                  <TableCell className="font-medium">{product.name}</TableCell>
+                  <TableCell>
+                    <Badge
+                      variant={
+                        product.status === "Complete"
+                          ? "outline"
+                          : "destructive"
+                      }
+                    >
+                      {product.status}
+                    </Badge>
+                  </TableCell>
+                  <TableCell>
+                    {product.reason ? (
+                      <Badge
+                        variant="secondary"
+                        className="bg-gray-200 dark:bg-gray-700"
+                      >
+                        {product.reason}
+                      </Badge>
+                    ) : (
+                      "-"
+                    )}
+                  </TableCell>
+                  <TableCell className="text-right">{product.date}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
         </CardContent>
       </Card>
     </div>
-  )
+  );
 }

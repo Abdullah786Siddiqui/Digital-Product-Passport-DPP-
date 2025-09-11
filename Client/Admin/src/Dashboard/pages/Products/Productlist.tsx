@@ -1,6 +1,6 @@
-// src/pages/Products/List.jsx
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
+import { useEffect, useState } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import {
   Table,
   TableBody,
@@ -8,58 +8,107 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table"
-import { Badge } from "@/components/ui/badge"
-import { Input } from "@/components/ui/input"
+} from "@/components/ui/table";
+import { Input } from "@/components/ui/input";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { 
-   Search, Filter, MoreHorizontal 
-} from "lucide-react"
-import { Link } from "react-router-dom"
+} from "@/components/ui/dropdown-menu";
+import {
+  Search,
+  Filter,
+  MoreHorizontal,
+  PlusCircle
+} from "lucide-react";
+import { Link } from "react-router-dom";
+
+// Define the type for a single product object
+interface Product {
+  id?: string; // Optional because the form might not provide it
+  name: string;
+  category: string;
+  productImage?: string | null; // Optional
+  materials?: { name: string; percentage: string }[];
+  certifications?: string[];
+  pefScore?: string;
+  frenchScore?: string;
+  carbonFootprint: string;
+  waterUsage: string;
+  energyUsage: string;
+  careInstructions?: string[];
+  chemicals?: { name: string; usage: string }[];
+  processes?: { name: string; location: string; method: string }[];
+}
 
 export default function ProductsList() {
-  const products = [
-    {
-      id: "prod_001",
-      name: "Eco-Friendly Water Bottle",
-      category: "Household",
-      status: "Published",
-      supplier: "Green Supply Co.",
-      lastUpdated: "2h ago",
-    },
-    {
-      id: "prod_002",
-      name: "Organic Cotton T-Shirt",
-      category: "Apparel",
-      status: "Draft",
-      supplier: "EcoWear Ltd.",
-      lastUpdated: "1d ago",
-    },
-    {
-      id: "prod_003",
-      name: "Recyclable Phone Case",
-      category: "Electronics",
-      status: "Expiring",
-      supplier: "Future Plastics",
-      lastUpdated: "3d ago",
-    },
-  ]
+  // Use the 'Product' interface to type the state
+  const [products, setProducts] = useState<Product[]>([]);
+
+  useEffect(() => {
+    // Fetch data from local storage
+    const storedProducts = localStorage.getItem('products');
+    if (storedProducts) {
+      try {
+        const parsedProducts: Product[] = JSON.parse(storedProducts);
+        setProducts(parsedProducts);
+      } catch (e) {
+        console.error("Failed to parse products from local storage", e);
+        // Fallback to default if parsing fails
+        setDefaultProducts();
+      }
+    } else {
+      // If no data is in local storage, set a default array
+      setDefaultProducts();
+    }
+  }, []); // The empty array ensures this runs only once
+
+  const setDefaultProducts = () => {
+    const defaultProducts: Product[] = [
+      {
+        id: "prod_001",
+        name: "Eco-Friendly Water Bottle",
+        category: "Household",
+        productImage: "https://images.unsplash.com/photo-1591873426293-195c613c242a",
+        carbonFootprint: "3535 kg CO2e",
+        waterUsage: "343 liters",
+        energyUsage: "353 kWh"
+      },
+      {
+        id: "prod_002",
+        name: "Organic Cotton T-Shirt",
+        category: "Apparel",
+        productImage: "https://images.unsplash.com/photo-1620799140408-edc6d17b87c0",
+        carbonFootprint: "1500 kg CO2e",
+        waterUsage: "5000 liters",
+        energyUsage: "200 kWh"
+      },
+      {
+        id: "prod_003",
+        name: "Recyclable Phone Case",
+        category: "Electronics",
+        productImage: "https://images.unsplash.com/photo-1629837581561-12f0f4a13e2e",
+        carbonFootprint: "200 kg CO2e",
+        waterUsage: "20 liters",
+        energyUsage: "50 kWh"
+      },
+    ];
+    setProducts(defaultProducts);
+  };
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="py-2 space-y-6">
       {/* Header Section */}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <h1 className="text-3xl font-bold">Products</h1>
         <Button asChild>
-      <Link to={"/AddProduct"}  >
-      Add Product
-      </Link>
-    </Button>
+          <Link to={"/AddProduct"}>
+              <PlusCircle className="h-4 w-4 mr-2" />
+
+            Add Product
+          </Link>
+        </Button>
       </div>
 
       {/* Summary Cards */}
@@ -122,30 +171,24 @@ export default function ProductsList() {
               <TableRow>
                 <TableHead className="px-2">Name</TableHead>
                 <TableHead>Category</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>Supplier</TableHead>
-                <TableHead>Last Updated</TableHead>
+                <TableHead>Carbon Footprint</TableHead>
+                <TableHead>Water Usage</TableHead>
+                <TableHead>Energy Usage</TableHead>
                 <TableHead className="text-right">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {products.map((product) => (
                 <TableRow key={product.id}>
-                  <TableCell className="font-medium">{product.name}</TableCell>
-                  <TableCell>{product.category}</TableCell>
-                  <TableCell>
-                    {product.status === "Published" && (
-                      <Badge className="bg-green-500">Published</Badge>
-                    )}
-                    {product.status === "Draft" && (
-                      <Badge variant="outline">Draft</Badge>
-                    )}
-                    {product.status === "Expiring" && (
-                      <Badge className="bg-yellow-500 text-black">Expiring</Badge>
-                    )}
+                  <TableCell className="font-medium">
+                    <div className="flex items-center gap-2">
+                      <span>{product.name}</span>
+                    </div>
                   </TableCell>
-                  <TableCell>{product.supplier}</TableCell>
-                  <TableCell>{product.lastUpdated}</TableCell>
+                  <TableCell>{product.category}</TableCell>
+                  <TableCell>{product.carbonFootprint}</TableCell>
+                  <TableCell>{product.waterUsage}</TableCell>
+                  <TableCell>{product.energyUsage}</TableCell>
                   <TableCell className="text-right">
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
@@ -173,5 +216,5 @@ export default function ProductsList() {
         <Button variant="outline" size="sm">Next</Button>
       </div>
     </div>
-  )
+  );
 }

@@ -7,12 +7,8 @@ import {
   Zap,
   LayoutDashboard,
   Package,
-  Truck,
-  Layers,
-  BarChart2,
   PlusSquare,
   List,
-  Info,
   Workflow,
 } from "lucide-react";
 import { NavMain } from "@/components/nav-main";
@@ -69,41 +65,20 @@ const data = {
     url: "ProductsList",
     icon: List,
   },
-  {
-    title: "Product Detail",
-    url: "ProductDetail",
-    icon: Info,
-  },
+ 
   {
     title: "Add Product",
     url: "AddProduct",
     icon: PlusSquare,
   },
   {
-    title: "Journey",
+    title: "Product Journey",
     url: "JourneyTimeline", 
     icon: Workflow,
   },
     ],
   },
-    {
-      title: "Suppliers",
-      url: "/",
-      icon: Truck,
-      isActive: true,
-    },
-    {
-      title: "Materials",
-      url: "/",
-      icon: Layers,
-      isActive: true,
-    },
-    {
-      title: "Analytics",
-      url: "/",
-      icon: BarChart2,
-      isActive: true,
-    },
+   
   ],
   // projects: [
   //   {
