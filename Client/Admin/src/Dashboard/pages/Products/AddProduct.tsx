@@ -270,7 +270,7 @@ const handleSubmit = () => {
     switch (currentStep) {
       case 0:
         return (
-          <div className="space-y-8">
+          <div className="space-y-8  ">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
               <div className="space-y-6">
                 <div className="space-y-4">
@@ -615,7 +615,7 @@ const handleSubmit = () => {
                   <Button
                     key={idx}
                     variant={formData.careInstructions.includes(item.value) ? "default" : "outline"}
-                    className="justify-start gap-2"
+                    className="justify-start gap-2 "
                     onClick={() => handleCareInstructionChange(item.value)}
                   >
                     <item.icon className="w-4 h-4" />
@@ -822,7 +822,7 @@ const handleSubmit = () => {
   };
 
   return (
-    <div className="space-y-8 min-h-screen py-2">
+    <div className="space-y-8 min-h-screen p-3 bg-[whitesmoke]">
       <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
         <h1 className="text-3xl font-bold text-gray-800">Add New Product</h1>
         <Button variant="outline" className="text-gray-700 border-gray-300">

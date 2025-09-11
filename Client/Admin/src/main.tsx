@@ -8,6 +8,7 @@ import ProductsList from './Dashboard/pages/Products/Productlist.tsx';
 import ProductDetail from './Dashboard/pages/Products/ProductDetail.tsx';
 import AddProduct from './Dashboard/pages/Products/AddProduct.tsx';
 import JourneyTimeline from './Dashboard/pages/Products/JourneyTimeline.tsx';
+import ProductImpact from './Dashboard/pages/Products/Impact.tsx';
 
 
 const router = createBrowserRouter([
@@ -24,6 +25,8 @@ const router = createBrowserRouter([
           { path: "ProductDetail", element: <ProductDetail /> },
           { path: "AddProduct", element: <AddProduct /> },
           { path: "JourneyTimeline", element: <JourneyTimeline /> },
+          { path: "ProductImpact", element: <ProductImpact /> },
+
 
 
 

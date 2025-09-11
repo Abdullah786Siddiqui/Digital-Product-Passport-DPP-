@@ -98,7 +98,7 @@ export default function Dashboard() {
   const completedPercentage = (completedProducts / totalProducts) * 100;
 
   return (
-    <div className="py-2 space-y-8   min-h-screen">
+    <div className="p-3 space-y-8 bg-[whitesmoke]    min-h-screen">
       {/* Header and Actions */}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 pb-4 border-b border-gray-200 dark:border-gray-800 ">
         <div>
@@ -121,12 +121,12 @@ export default function Dashboard() {
       {/* Main KPI Cards with Sparkline charts */}
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {/* Total Products Card */}
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
+        <Card className="bg-fuchsia-100">
+          <CardHeader className="flex flex-row items-center justify-between pb-2  ">
             <CardTitle className="text-sm font-medium">
               Total Products
             </CardTitle>
-            <Package className="h-5 w-5 text-muted-foreground" />
+            <Package className="h-5 w-5  text-fuchsia-500" />
           </CardHeader>
           <CardContent>
             <div className="text-4xl font-bold">{totalProducts}</div>
@@ -137,7 +137,7 @@ export default function Dashboard() {
         </Card>
 
         {/* Complete Products Card */}
-        <Card>
+        <Card className="bg-green-100">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium">Completed</CardTitle>
             <CheckCircle className="h-5 w-5 text-green-500" />
@@ -156,7 +156,7 @@ export default function Dashboard() {
         </Card>
 
         {/* Incomplete Products Card */}
-        <Card>
+        <Card className="bg-yellow-100">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium">Incomplete</CardTitle>
             <AlertTriangle className="h-5 w-5 text-yellow-500" />

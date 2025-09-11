@@ -76,6 +76,11 @@ const data = {
     url: "JourneyTimeline", 
     icon: Workflow,
   },
+   {
+    title: "Product Impact",
+    url: "ProductImpact", 
+    icon: Workflow,
+  },
     ],
   },
    
@@ -102,10 +107,10 @@ const data = {
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar collapsible="icon" {...props}>
-      <SidebarHeader>
+      <SidebarHeader className="bg-white " >
         <TeamSwitcher teams={data.teams} />
       </SidebarHeader>
-      <SidebarContent>
+      <SidebarContent className="bg-white" >
         <NavMain items={data.navMain} />
         {/* <NavProjects projects={data.projects} /> */}
       </SidebarContent>

@@ -151,7 +151,7 @@ const JourneyTimeline = () => {
   };
 
   return (
-    <div className="min-h-screen font-sans">
+    <div className="min-h-screen font-sans p-3 bg-[whitesmoke]">
       <div className="w-full mx-auto">
         <div className="flex items-center space-x-4 mb-8">
           <h1 className="text-3xl font-bold">

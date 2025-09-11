@@ -20,7 +20,10 @@ import {
   Search,
   Filter,
   MoreHorizontal,
-  PlusCircle
+  PlusCircle,
+  FileWarningIcon,
+  AwardIcon,
+  PackageIcon
 } from "lucide-react";
 import { Link } from "react-router-dom";
 
@@ -98,7 +101,7 @@ export default function ProductsList() {
   };
 
   return (
-    <div className="py-2 space-y-6">
+    <div className="p-3 space-y-6 bg-[whitesmoke]">
       {/* Header Section */}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <h1 className="text-3xl font-bold">Products</h1>
@@ -111,36 +114,42 @@ export default function ProductsList() {
         </Button>
       </div>
 
-      {/* Summary Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <Card className="shadow-sm">
-          <CardHeader className="pb-2">
-            <CardTitle>Total Products</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-2xl font-bold">2,450</p>
-            <p className="text-sm text-muted-foreground">Across all categories</p>
-          </CardContent>
-        </Card>
-        <Card className="shadow-sm">
-          <CardHeader className="pb-2">
-            <CardTitle>Incomplete Passports</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-2xl font-bold">128</p>
-            <p className="text-sm text-muted-foreground">Action required soon</p>
-          </CardContent>
-        </Card>
-        <Card className="shadow-sm">
-          <CardHeader className="pb-2">
-            <CardTitle>Expiring Certifications</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-2xl font-bold">34</p>
-            <p className="text-sm text-muted-foreground">Within 30 days</p>
-          </CardContent>
-        </Card>
-      </div>
+   {/* Summary Cards */}
+<div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+  <Card className="shadow-sm hover:shadow-lg transition-shadow duration-200 rounded-lg bg-blue-100">
+    <CardHeader className="pb-2 flex items-center justify-between gap-2">
+      <CardTitle>Total Products</CardTitle>
+      <PackageIcon className="h-5 w-5 text-blue-500" />
+    </CardHeader>
+    <CardContent>
+      <p className="text-2xl font-bold text-gray-800">2,450</p>
+      <p className="text-sm text-gray-500">Across all categories</p>
+    </CardContent>
+  </Card>
+
+  <Card className="shadow-sm hover:shadow-lg transition-shadow duration-200 rounded-lg bg-yellow-100">
+    <CardHeader className="pb-2 flex items-center justify-between gap-2">
+      <CardTitle>Incomplete Passports</CardTitle>
+      <FileWarningIcon className="h-5 w-5 text-yellow-500" />
+    </CardHeader>
+    <CardContent>
+      <p className="text-2xl font-bold text-gray-800">128</p>
+      <p className="text-sm text-gray-500">Action required soon</p>
+    </CardContent>
+  </Card>
+
+  <Card className="shadow-sm hover:shadow-lg transition-shadow duration-200 rounded-lg bg-green-100">
+    <CardHeader className="pb-2 flex items-center justify-between gap-2">
+      <CardTitle>Expiring Certifications</CardTitle>
+      <AwardIcon className="h-5 w-5 text-green-500" />
+    </CardHeader>
+    <CardContent>
+      <p className="text-2xl font-bold text-gray-800">34</p>
+      <p className="text-sm text-gray-500">Within 30 days</p>
+    </CardContent>
+  </Card>
+</div>
+
 
       {/* Search + Filters */}
       <div className="flex flex-col md:flex-row items-center justify-between gap-3">
